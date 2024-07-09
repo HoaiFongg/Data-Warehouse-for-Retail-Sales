@@ -1,7 +1,7 @@
 import pandas as pd
 import pyodbc
 
-# Kết nối đến SQL Server
+# SQL Server connection function
 def connect_to_sql_server():
     conn = pyodbc.connect(
         'DRIVER={ODBC Driver 17 for SQL Server};'
@@ -14,38 +14,21 @@ def connect_to_sql_server():
 
 # Extract data from CSV files
 def extract():
-    product_df = pd.read_csv('D:/Project/Data/product.csv')
-    transaction_data_df = pd.read_csv('D:/Project/Data/transaction_data.csv')
-    hh_demographic_df = pd.read_csv('D:/Project/Data/hh_demographic.csv')
-    campaign_table_df = pd.read_csv('D:/Project/Data/campaign_table.csv')
-    coupon_df = pd.read_csv('D:/Project/Data/coupon.csv')
-    campaign_desc_df = pd.read_csv('D:/Project/Data/campaign_desc.csv')
-    coupon_redempt_df = pd.read_csv('D:/Project/Data/coupon_redempt.csv')
-    return {
-        'product': product_df,
-        'transaction_data': transaction_data_df,
-        'hh_demographic': hh_demographic_df,
-        'campaign_table': campaign_table_df,
-        'coupon': coupon_df,
-        'campaign_desc': campaign_desc_df,
-        'coupon_redempt': coupon_redempt_df
-    }
-
-# Transform data if needed (currently just pass through)
-def transform(dataframes):
-    # Làm sạch dữ liệu trong hh_demographic
-    hh_demographic_df = dataframes['hh_demographic']
+    dataframes = {}
+    data_files = [
+        'product.csv',
+        'transaction_data.csv',
+        'hh_demographic.csv',
+        'campaign_table.csv',
+        'coupon.csv',
+        'campaign_desc.csv',
+        'coupon_redempt.csv'
+    ]
+    base_path = 'D:/Project/Data/'  # Update with your actual base path
     
-    # Chuyển đổi các giá trị không hợp lệ thành số nguyên
-    def clean_household_size(size):
-        try:
-            return int(size.replace('+', ''))
-        except ValueError:
-            return None  # Hoặc một giá trị mặc định như 0
-    
-    hh_demographic_df['HOUSEHOLD_SIZE_DESC'] = hh_demographic_df['HOUSEHOLD_SIZE_DESC'].apply(clean_household_size)
-    
-    dataframes['hh_demographic'] = hh_demographic_df
+    for file in data_files:
+        df = pd.read_csv(base_path + file)
+        dataframes[file.split('.')[0]] = df
     
     return dataframes
 
@@ -60,15 +43,15 @@ def load(conn, dataframes, batch_size=1000):
             batch_df = df.iloc[start:end]
 
             for index, row in batch_df.iterrows():
-                # Chuyển đổi các giá trị numpy thành kiểu dữ liệu Python cơ bản
+                # Convert numpy values to Python basic data types
                 row = row.apply(lambda x: x.item() if hasattr(x, 'item') else x)
                 
-                # Kiểm tra các ràng buộc khóa ngoại nếu có
+                # Check foreign key constraints if specified
                 if foreign_keys:
                     foreign_key_violation = False
                     for fk, fk_table, fk_column in foreign_keys:
                         sql_check_fk = f"SELECT COUNT(*) FROM {fk_table} WHERE {fk_column} = ?"
-                        cursor.execute(sql_check_fk, row[fk])
+                        cursor.execute(sql_check_fk, (int(row[fk]),))
                         if cursor.fetchone()[0] == 0:
                             foreign_key_violation = True
                             print(f"Foreign key constraint violation in {table_name}: {fk} = {row[fk]}")
@@ -80,7 +63,7 @@ def load(conn, dataframes, batch_size=1000):
                 placeholders = ', '.join(['?'] * len(row))
                 columns = ', '.join(row.index)
                 sql_check = f"SELECT COUNT(*) FROM {table_name} WHERE {primary_key} = ?"
-                cursor.execute(sql_check, row[primary_key])
+                cursor.execute(sql_check, (int(row[primary_key]),))
                 if cursor.fetchone()[0] == 0:
                     sql = f"INSERT INTO {table_name} ({columns}) VALUES ({placeholders})"
                     cursor.execute(sql, tuple(row))
@@ -109,10 +92,6 @@ def etl():
     dataframes = extract()
     print("Data extracted successfully.")
     
-    print("Transforming data...")
-    dataframes = transform(dataframes)
-    print("Data transformed successfully.")
-    
     print("Loading data into SQL Server...")
     load(conn, dataframes)
     print("Data loaded successfully.")
@@ -120,6 +99,6 @@ def etl():
     conn.close()
     print("ETL process completed.")
 
-# Run the ETL process
+# Entry point of the script
 if __name__ == "__main__":
     etl()
