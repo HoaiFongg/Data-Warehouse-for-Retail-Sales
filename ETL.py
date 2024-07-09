@@ -32,6 +32,12 @@ def extract():
     
     return dataframes
 
+# Transform data (if needed)
+def transform(dataframes):
+    # Perform any transformation required on the dataframes here
+    # For now, we assume no transformation is needed and just return the dataframes as is
+    return dataframes
+
 # Load data into SQL Server tables
 def load(conn, dataframes, batch_size=1000):
     cursor = conn.cursor()
@@ -90,14 +96,18 @@ def etl():
     
     print("Extracting data from CSV files...")
     dataframes = extract()
-    print("Data extracted successfully.")
+    print("------Data extracted successfully------")
+    
+    print("Transforming data...")
+    transformed_dataframes = transform(dataframes)
+    print("------Data transformed successfully------")
     
     print("Loading data into SQL Server...")
-    load(conn, dataframes)
-    print("Data loaded successfully.")
+    load(conn, transformed_dataframes)
+    print("------Data loaded successfully------")
     
     conn.close()
-    print("ETL process completed.")
+    print("------------ETL process completed------------")
 
 # Entry point of the script
 if __name__ == "__main__":
