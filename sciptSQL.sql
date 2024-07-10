@@ -2,6 +2,7 @@ use master
 CREATE database [DataWarehouse-retail-sales]
 use [DataWarehouse-retail-sales]
 
+--Create table product
 CREATE TABLE product (
     PRODUCT_ID INT PRIMARY KEY,
     MANUFACTURER INT,
@@ -12,6 +13,7 @@ CREATE TABLE product (
     CURR_SIZE_OF_PRODUCT TEXT
 );
 
+--Create table transaction_data
 CREATE TABLE transaction_data (
     household_key INT,
     BASKET_ID BIGINT,
@@ -29,6 +31,8 @@ CREATE TABLE transaction_data (
     PRIMARY KEY (BASKET_ID, DAY, STORE_ID)
 );
 
+--Create table household_key
+CREATE TABLE household_key (
 CREATE TABLE hh_demographic (
     AGE_DESC TEXT,
     MARITAL_STATUS_CODE TEXT,
@@ -40,18 +44,23 @@ CREATE TABLE hh_demographic (
     household_key INT PRIMARY KEY
 );
 
+--Create table coupon_redempt
+CREATE TABLE coupon_redempt (
 CREATE TABLE campaign_table (
     DESCRIPTION TEXT,
     household_key INT,
     CAMPAIGN INT,
 );
 
+--Create table coupon_match
+CREATE TABLE coupon_match
 CREATE TABLE coupon (
     COUPON_UPC BIGINT PRIMARY KEY,
     PRODUCT_ID INT,
     CAMPAIGN INT
 );
 
+--Create table campaign_desc
 CREATE TABLE campaign_desc (
     DESCRIPTION TEXT,
     CAMPAIGN INT PRIMARY KEY,
@@ -59,6 +68,7 @@ CREATE TABLE campaign_desc (
     END_DAY INT
 );
 
+--Create table coupon_redempt
 CREATE TABLE coupon_redempt (
     household_key INT,
     DAY INT,
