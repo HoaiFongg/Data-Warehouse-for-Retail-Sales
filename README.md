@@ -17,3 +17,8 @@ This project implements an ETL (Extract, Transform, Load) process for a data war
 2. Install the required Python packages:
    ```bash
    pip install -r requirements.txt
+
+## Files
+    etl.py: Main script implementing the ETL process.
+    requirements.txt: List of Python dependencies for the project.
+    data/: Directory for storing input CSV files.
