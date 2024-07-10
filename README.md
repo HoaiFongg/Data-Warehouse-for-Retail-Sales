@@ -1,6 +1,6 @@
 # Data Warehouse for Retail Sales
 
-This project implements an ETL (Extract, Transform, Load) process for a data warehouse focused on retail sales data. It extracts data from CSV files, performs transformations if necessary, and loads the data into SQL Server tables.
+This project implements an ETL (Extract, Transform, Load) process for a data warehouse focused on retail sales data. It extracts data from CSV files, performs transformations if necessary, and loads the data into SQL Server tables.You should change the user password and driver to suit you.
 
 ## Requirements
 
