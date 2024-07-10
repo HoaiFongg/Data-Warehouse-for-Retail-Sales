@@ -12,13 +12,13 @@ This project implements an ETL (Extract, Transform, Load) process for a data war
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/data-warehouse-retail-sales.git
+   https://github.com/HoaiFongg/Data-Warehouse-for-Retail-Sales.git
    cd data-warehouse-retail-sales
 2. Install the required Python packages:
    ```bash
    pip install -r requirements.txt
 
 ## Files
-    etl.py: Main script implementing the ETL process.
-    requirements.txt: List of Python dependencies for the project.
-    data/: Directory for storing input CSV files.
+- etl.py: Main script implementing the ETL process.
+- requirements.txt: List of Python dependencies for the project.
+- data/: Directory for storing input CSV files.
