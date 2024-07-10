@@ -12,7 +12,7 @@ This project implements an ETL (Extract, Transform, Load) process for a data war
 
 1. Clone the repository:
    ```bash
-   https://github.com/HoaiFongg/Data-Warehouse-for-Retail-Sales.git
+   git clone https://github.com/HoaiFongg/Data-Warehouse-for-Retail-Sales.git
    cd data-warehouse-retail-sales
 2. Install the required Python packages:
    ```bash
